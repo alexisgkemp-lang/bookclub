@@ -1,4 +1,4 @@
-const RESEND_EVENTS_ENDPOINT = "https://api.resend.com/events";
+const RESEND_EVENTS_ENDPOINT = "https://api.resend.com/events/send";
 const EVENT_NAME = "bookclub.signup";
 
 const pageHtml = `<!doctype html>
@@ -287,11 +287,10 @@ async function handleSignup(request, env) {
     },
     body: JSON.stringify({
       event: EVENT_NAME,
+      name: EVENT_NAME,
       email,
       payload: {
-        source: "bookclub.atomic.community",
-        signup_url: request.url,
-        signed_up_at: new Date().toISOString(),
+        firstName: "",
       },
     }),
   });
