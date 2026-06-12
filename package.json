@@ -1,0 +1,14 @@
+{
+  "name": "synced-text-cloudflare",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:dev": "node scripts/build-embedded-worker.js && set SCRIPT_NAME=synced-text-pages-dev&& node scripts/deploy-content-api.js",
+    "deploy:prod": "node scripts/build-embedded-worker.js && set SCRIPT_NAME=synced-text-pages&& node scripts/deploy-content-api.js"
+  },
+  "devDependencies": {
+    "wrangler": "4.98.0"
+  }
+}

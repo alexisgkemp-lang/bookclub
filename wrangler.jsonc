@@ -1,0 +1,32 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "synced-text-pages",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-06-09",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "r2_buckets": [
+    {
+      "binding": "PAGES_BUCKET",
+      "bucket_name": "synced-text-pages"
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "read.globalbook.club",
+      "custom_domain": true
+    }
+  ],
+  "secrets": {
+    "required": ["ELEVENLABS_API_KEY", "OPENAI_API_KEY", "ADMIN_PASSWORD"]
+  },
+  "vars": {
+    "ELEVENLABS_VOICE_ID": "jfIS2w2yJi0grJZPyEsk",
+    "ELEVENLABS_MODEL_ID": "eleven_turbo_v2_5",
+    "OPENAI_MODEL": "gpt-5-mini",
+    "PUBLIC_BASE_URL": "https://read.globalbook.club"
+  }
+}

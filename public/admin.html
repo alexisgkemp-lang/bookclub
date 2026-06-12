@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Synced Pages Admin</title>
+    <link rel="stylesheet" href="styles.css?v=6" />
+  </head>
+  <body class="admin-body">
+    <main class="admin-shell">
+      <section class="admin-panel">
+        <p class="admin-label">Create synced audio</p>
+        <h1>Paste text, generate a private reading page.</h1>
+        <p class="admin-copy">
+          Add a title and your text. The app will create a new audio-synced reading URL.
+        </p>
+
+        <form id="create-form" class="create-form">
+          <label for="title">Title</label>
+          <input id="title" name="title" value="A Quiet Page" />
+
+          <label for="text">Text</label>
+          <textarea id="text" name="text" rows="12">The page should feel calm and deliberate. Each word settles into focus as the voice reaches it, like ink warming on paper.</textarea>
+
+          <button id="submit-button" type="submit">Generate page</button>
+          <p id="form-status" class="form-status" role="status"></p>
+        </form>
+      </section>
+    </main>
+
+    <script src="upload.js?v=6"></script>
+  </body>
+</html>
