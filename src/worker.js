@@ -13,7 +13,7 @@ export default {
     const url = new URL(request.url);
 
     if (url.pathname === "/" || url.pathname === "/index.html") {
-      return Response.redirect(`${url.origin}/play.html?id=${encodeURIComponent(env.FEATURED_PAGE_ID || FEATURED_PAGE_ID)}`, 302);
+      return env.ASSETS.fetch(new Request(url.origin + "/signup.html", request));
     }
 
     if (url.pathname === "/admin") {
@@ -79,6 +79,15 @@ export default {
     const audioMatch = url.pathname.match(/^\/api\/audio\/([^/]+)$/);
     if (request.method === "GET" && audioMatch) {
       return getAudio(audioMatch[1], env);
+    }
+
+    // ── Signup API ──
+    if (request.method === "POST" && url.pathname === "/api/signup") {
+      try {
+        return await handleSignup(request, env);
+      } catch (error) {
+        return json({ error: error.message || "Signup failed." }, 500);
+      }
     }
 
     // ── Welcome page API routes ──
@@ -584,6 +593,69 @@ function futureDate(seconds) {
 }
 
 // ── Welcome page functions ──
+async function handleSignup(request, env) {
+  const body = await request.json().catch(() => null);
+  const email = String(body?.email || "").trim().toLowerCase();
+
+  if (!email || !email.includes("@")) {
+    return json({ message: "A valid email is required." }, 400);
+  }
+
+  const resendHeaders = {
+    "authorization": `Bearer ${env.RESEND_API_KEY}`,
+    "content-type": "application/json"
+  };
+
+  // Create or update Resend contact
+  const contactResponse = await fetch("https://api.resend.com/contacts", {
+    method: "POST",
+    headers: resendHeaders,
+    body: JSON.stringify({
+      email,
+      unsubscribed: false
+    })
+  });
+
+  if (!contactResponse.ok && contactResponse.status !== 409) {
+    const text = await contactResponse.text();
+    return json({ message: `Failed to create contact: ${text}` }, 500);
+  }
+
+  // Extract contact_id from Resend response (or generate fallback)
+  let contactId = "";
+  try {
+    const contactData = await contactResponse.json();
+    contactId = contactData?.id || "";
+  } catch (e) {}
+  if (!contactId) {
+    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(email));
+    contactId = Array.from(new Uint8Array(hashBuffer)).slice(0, 8).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+  }
+
+  // Store contact in R2
+  await env.PAGES_BUCKET.put(`welcome/${contactId}/contact.json`, JSON.stringify({
+    contact_id: contactId,
+    email,
+    source: "signup_page",
+    created_at: new Date().toISOString()
+  }), {
+    httpMetadata: { content_type: "application/json; charset=utf-8" }
+  });
+
+  // Send welcome email
+  await fetch("https://api.resend.com/events/send", {
+    method: "POST",
+    headers: resendHeaders,
+    body: JSON.stringify({
+      event: "serial.subscribed",
+      email,
+      payload: { source: "signup_page", contact_id: contactId }
+    })
+  });
+
+  return json({ ok: true, contact_id: contactId });
+}
+
 async function saveWelcomeResponse(request, env) {
   const body = await request.json().catch(() => null);
   const contactId = String(body?.contact_id || "").trim();

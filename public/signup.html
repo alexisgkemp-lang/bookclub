@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Global Book Club</title>
+    <meta
+      name="description"
+      content="Join a friendly online book club for short stories, better conversations, and better English."
+    >
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111a16;
+        --muted: #536158;
+        --paper: #f6f1e8;
+        --mist: #dfe8df;
+        --surface: #fffaf1;
+        --line: #d9cfc0;
+        --accent: #1f5f57;
+        --accent-dark: #174943;
+        --clay: #b86f52;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+      }
+
+      .hero {
+        min-height: 100svh;
+        display: grid;
+        align-items: center;
+        padding: clamp(24px, 6vw, 72px);
+        background:
+          radial-gradient(circle at 12% 18%, rgba(35, 107, 99, 0.13), transparent 32%),
+          radial-gradient(circle at 88% 12%, rgba(184, 111, 82, 0.16), transparent 30%),
+          linear-gradient(135deg, #edf3ec 0%, var(--paper) 48%, #fbf4ef 100%);
+      }
+
+      .hero-inner {
+        width: min(100%, 820px);
+        margin: 0 auto;
+      }
+
+      .eyebrow {
+        margin: 0 0 18px;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 10ch;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(3.4rem, 10vw, 6.4rem);
+        line-height: 0.95;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .tagline {
+        max-width: 46rem;
+        margin: 28px 0 0;
+        font-size: clamp(1.25rem, 3vw, 1.8rem);
+        line-height: 1.35;
+        color: var(--muted);
+      }
+
+      .details {
+        max-width: 42rem;
+        margin: 20px 0 0;
+        color: var(--ink);
+        font-size: clamp(1.02rem, 2.2vw, 1.2rem);
+        line-height: 1.5;
+      }
+
+      .signup-form {
+        margin-top: 30px;
+        max-width: 690px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+        font-weight: 750;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+      }
+
+      input,
+      button {
+        min-height: 56px;
+        border-radius: 8px;
+        font: inherit;
+      }
+
+      input {
+        width: 100%;
+        border: 1px solid var(--line);
+        padding: 0 16px;
+        color: var(--ink);
+        background: rgba(255, 250, 241, 0.86);
+      }
+
+      input:focus {
+        border-color: var(--clay);
+        outline: 3px solid rgba(184, 111, 82, 0.2);
+      }
+
+      button {
+        border: 0;
+        padding: 0 22px;
+        background: var(--accent);
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+        box-shadow: 0 10px 24px rgba(31, 95, 87, 0.16);
+        transition: background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+      }
+
+      button:hover {
+        background: var(--accent-dark);
+        box-shadow: 0 14px 30px rgba(31, 95, 87, 0.2);
+        transform: translateY(-1px);
+      }
+
+      button:disabled {
+        cursor: wait;
+        opacity: 0.72;
+      }
+
+      .form-note,
+      .form-message {
+        margin: 12px 0 0;
+        min-height: 1.4em;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .form-message {
+        font-weight: 800;
+        color: var(--accent-dark);
+      }
+
+      .explainer {
+        padding: clamp(56px, 8vw, 96px) clamp(24px, 6vw, 72px);
+        background: var(--mist);
+      }
+
+      .explainer-inner {
+        width: min(100%, 860px);
+        margin: 0 auto;
+      }
+
+      .explainer h2 {
+        margin: 0;
+        max-width: 12ch;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2.5rem, 7vw, 4.8rem);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      .meeting-card { width: min(100%, 520px); margin: 0 0 48px; padding: 22px 24px; border: 1px solid rgba(17, 26, 22, 0.13); border-radius: 8px; background: rgba(255, 250, 241, 0.5); }
+      .meeting-label { margin: 0 0 8px; color: #4a5a50; font-size: 0.82rem; font-weight: 800; text-transform: uppercase; }
+      .meeting-date { margin: 0; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.55rem, 3vw, 2.15rem); line-height: 1.12; }
+      .meeting-note { margin: 10px 0 0; color: #4a5a50; font-size: 1rem; line-height: 1.45; }
+
+      .explainer-copy {
+        display: grid;
+        gap: 22px;
+        margin-top: 28px;
+        max-width: 46rem;
+      }
+
+      .explainer-copy p {
+        margin: 0;
+        color: #334039;
+        font-size: clamp(1.08rem, 2.3vw, 1.32rem);
+        line-height: 1.55;
+      }
+
+      @media (max-width: 620px) {
+        .hero {
+          min-height: 100svh;
+          padding: 24px 18px;
+        }
+
+        h1 {
+          font-size: clamp(3.1rem, 17vw, 4.8rem);
+        }
+
+        .tagline {
+          margin-top: 24px;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-inner">
+          <p class="eyebrow">Global Book Club</p>
+          <h1 id="page-title">Join the Global Book Club</h1>
+          <p class="tagline">Short, satisfying stories. Great conversations. Better English.</p>
+          <p class="details">Get the story and meeting link in your inbox.</p>
+
+          <form class="signup-form" id="signup-form" action="/api/signup" method="post">
+            <label class="sr-only" for="email">Email address</label>
+            <div class="form-row">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                inputmode="email"
+                placeholder="Email"
+                required
+              >
+              <button type="submit">Send me the details</button>
+            </div>
+            <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="explainer" aria-labelledby="explainer-title">
+        <div class="explainer-inner">
+          <div class="meeting-card">
+            <p class="meeting-label">Next live meeting</p>
+            <p class="meeting-date">Wednesday 17 June, 7pm UK time</p>
+            <p class="meeting-note">Sign up and I'll send the story and meeting link.</p>
+          </div>
+          <h2 id="explainer-title">How it works</h2>
+          <div class="explainer-copy">
+            <p>Want to read more in English but can't find the right thing?</p>
+            <p>
+              We read short stories by great writers, then meet online and talk about them.
+            </p>
+            <p>
+              The group is friendly, relaxed, and a simple way to practise your English.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const form = document.querySelector("#signup-form");
+      const message = document.querySelector("#form-message");
+      const button = form.querySelector("button");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        message.textContent = "";
+        button.disabled = true;
+        button.textContent = "Sending";
+
+        try {
+          const response = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(result.message || "Something went wrong.");
+          }
+
+          form.reset();
+          message.textContent = "You're in. Check your inbox for the details.";
+
+          if (result.contact_id) {
+            setTimeout(function () {
+              window.location.href = "/welcome.html?contact_id=" + encodeURIComponent(result.contact_id);
+            }, 1500);
+          }
+        } catch (error) {
+          message.textContent = error.message || "Something went wrong. Please try again.";
+        } finally {
+          button.disabled = false;
+          button.textContent = "Send me the details";
+        }
+      });
+    </script>
+  </body>
+</html>
