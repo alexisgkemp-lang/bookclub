@@ -76,10 +76,8 @@ body {
 }
 
 .event-middle {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 20px;
 }
 
@@ -94,9 +92,7 @@ body {
 }
 
 .event-date-block {
-  background: rgba(245, 242, 235, 0.6);
-  border-radius: 10px;
-  padding: 20px 24px;
+  padding: 0;
   margin: 0;
   text-align: center;
 }
