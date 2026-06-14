@@ -297,10 +297,11 @@
         button.textContent = "Sending";
 
         try {
-          const response = await fetch(form.action, {
-            method: "POST",
-            body: new FormData(form),
-          });
+        const response = await fetch(form.action, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: document.querySelector("#email").value }),
+        });
 
           const result = await response.json();
 
