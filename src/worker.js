@@ -100,7 +100,7 @@ async function handleSignup(request, env) {
     method: "POST",
     headers: resendHeaders,
     body: JSON.stringify({
-      event: "serial.subscribed",
+      event: "bookclub.signup",
       email,
       payload: { source: "signup_page", contact_id: contactId }
     })
