@@ -81,6 +81,27 @@ export default {
       return getAudio(audioMatch[1], env);
     }
 
+    // ── Welcome page API routes ──
+    if (request.method === "POST" && url.pathname === "/api/welcome/respond") {
+      try {
+        return await saveWelcomeResponse(request, env);
+      } catch (error) {
+        return json({ error: error.message || "Failed to save response." }, 500);
+      }
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/welcome/respond") {
+      const contactId = url.searchParams.get("contact_id");
+      if (!contactId) {
+        return json({ error: "contact_id is required." }, 400);
+      }
+      return getWelcomeResponse(contactId, env);
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/welcome/time-poll") {
+      return getTimePoll(env);
+    }
+
     return env.ASSETS.fetch(request);
   }
 };
@@ -560,4 +581,80 @@ function json(data, status = 200) {
 
 function futureDate(seconds) {
   return new Date(Date.now() + seconds * 1000).toUTCString();
+}
+
+// ── Welcome page functions ──
+async function saveWelcomeResponse(request, env) {
+  const body = await request.json().catch(() => null);
+  const contactId = String(body?.contact_id || "").trim();
+
+  if (!contactId) {
+    return json({ error: "contact_id is required." }, 400);
+  }
+
+  const key = `welcome/${contactId}/responses.json`;
+
+  let existing = {};
+  const object = await env.PAGES_BUCKET.get(key);
+  if (object) {
+    try {
+      existing = await object.json();
+    } catch (e) {}
+  }
+
+  const merged = { ...existing, contact_id: contactId };
+  if (body.event_id !== undefined) merged.event_id = body.event_id;
+  if (body.event_status !== undefined) merged.event_status = body.event_status;
+  if (body.preferred_time !== undefined) merged.preferred_time = body.preferred_time;
+  if (body.available_slots !== undefined) merged.available_slots = body.available_slots;
+  if (body.story_preferences !== undefined) merged.story_preferences = body.story_preferences;
+  if (body.speaking_interest !== undefined) merged.speaking_interest = body.speaking_interest;
+  if (body.speaking_clicked_at !== undefined) merged.speaking_clicked_at = body.speaking_clicked_at;
+  if (body.source !== undefined) merged.source = body.source;
+  if (body.timezone !== undefined) merged.timezone = body.timezone;
+  if (body.booked_at !== undefined) merged.booked_at = body.booked_at;
+  if (body.submitted_at !== undefined) merged.submitted_at = body.submitted_at;
+  if (body.updated_at !== undefined) merged.updated_at = body.updated_at;
+  merged.last_updated = new Date().toISOString();
+
+  await env.PAGES_BUCKET.put(key, JSON.stringify(merged), {
+    httpMetadata: { content_type: "application/json; charset=utf-8" }
+  });
+
+  return json({ ok: true });
+}
+
+async function getWelcomeResponse(contactId, env) {
+  const key = `welcome/${contactId}/responses.json`;
+  const object = await env.PAGES_BUCKET.get(key);
+
+  if (!object) {
+    return json({ found: false });
+  }
+
+  const data = await object.json();
+  return json({ found: true, data });
+}
+
+async function getTimePoll(env) {
+  const counts = {};
+  const list = await env.PAGES_BUCKET.list({ prefix: "welcome/" });
+
+  for (const item of list.objects) {
+    if (!item.key.endsWith("/responses.json")) continue;
+    try {
+      const object = await env.PAGES_BUCKET.get(item.key);
+      if (!object) continue;
+      const data = await object.json();
+      if (data.available_slots && Array.isArray(data.available_slots)) {
+        for (const slot of data.available_slots) {
+          counts[slot] = (counts[slot] || 0) + 1;
+        }
+      } else if (data.preferred_time) {
+        counts[data.preferred_time] = (counts[data.preferred_time] || 0) + 1;
+      }
+    } catch (e) {}
+  }
+
+  return json({ counts });
 }
