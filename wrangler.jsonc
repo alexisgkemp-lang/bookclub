@@ -16,17 +16,14 @@
   ],
   "routes": [
     {
-      "pattern": "read.globalbook.club",
+      "pattern": "signup.globalbook.club",
       "custom_domain": true
     }
   ],
   "secrets": {
-    "required": ["ELEVENLABS_API_KEY", "OPENAI_API_KEY", "ADMIN_PASSWORD", "RESEND_API_KEY"]
+    "required": ["RESEND_API_KEY"]
   },
   "vars": {
-    "ELEVENLABS_VOICE_ID": "jfIS2w2yJi0grJZPyEsk",
-    "ELEVENLABS_MODEL_ID": "eleven_turbo_v2_5",
-    "OPENAI_MODEL": "gpt-5-mini",
-    "PUBLIC_BASE_URL": "https://read.globalbook.club"
+    "PUBLIC_BASE_URL": "https://signup.globalbook.club"
   }
 }
