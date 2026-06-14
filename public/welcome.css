@@ -2,7 +2,6 @@
   --ink: #1a2e1a;
   --muted: #5a6b5a;
   --line: rgba(42, 64, 42, 0.12);
-  --card-bg: rgba(255, 255, 253, 0.7);
   --green: #2d6a4f;
   --green-bg: #e8f5e9;
   --whatsapp: #25d366;
@@ -19,17 +18,18 @@ body {
   min-height: 100vh;
   color: var(--ink);
   background:
-    radial-gradient(circle at 20% 0%, rgba(255,255,255,0.7), transparent 50%),
-    linear-gradient(160deg, #d4dfc8 0%, #e8dfd0 40%, #c5d4b8 100%);
+    radial-gradient(circle at 12% 18%, rgba(35, 107, 99, 0.13), transparent 32%),
+    radial-gradient(circle at 88% 12%, rgba(184, 111, 82, 0.16), transparent 30%),
+    linear-gradient(135deg, #edf3ec 0%, #f6f1e8 48%, #fbf4ef 100%);
 }
 
 .welcome-shell {
-  height: 100vh;
-  padding: 32px 18px;
+  min-height: 100svh;
+  padding: clamp(24px, 6vw, 72px);
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-width: 580px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
@@ -40,10 +40,6 @@ body {
   flex-direction: column;
   min-height: 0;
   transition: flex 400ms ease;
-}
-
-.carousel.is-done {
-  /* keeps height, hides content only */
 }
 
 .carousel.is-collapsed {
@@ -65,20 +61,15 @@ body {
 .carousel-card {
   flex: 0 0 100%;
   scroll-snap-align: start;
-  background: rgba(255, 255, 250, 0.78);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(33,29,24,0.05);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
 }
 
+/* Event card */
 .event-content {
-  padding: 40px 32px;
+  padding: 0;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -92,7 +83,6 @@ body {
   gap: 20px;
 }
 
-/* Event card */
 .event-greeting {
   margin: 0;
   font-family: "Playfair Display", Georgia, serif;
@@ -158,21 +148,7 @@ body {
 .btn + .btn { margin-top: 12px; }
 
 .card-bottom {
-  padding: 0 32px 32px;
-}
-
-.card-message {
-  background: var(--green-bg);
-  border-radius: 8px;
-  padding: 12px 14px;
-  margin-bottom: 16px;
-}
-
-.card-message p {
-  margin: 0;
-  font-size: 14px;
-  color: var(--green);
-  font-weight: 500;
+  padding: 0;
 }
 
 .btn-primary { background: var(--ink); color: #fff; }
@@ -191,15 +167,13 @@ body {
   border-color: var(--green);
 }
 
-.btn-done {
-  margin-top: auto;
-}
-
 /* Poll bottom sheet */
 .poll-sheet {
   position: absolute;
   inset: 0;
-  background: #fff;
+  background: rgba(255, 255, 250, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 12px;
   padding: 32px;
   transform: translateY(100%);
@@ -229,7 +203,7 @@ body {
   margin: 0 0 8px;
   font-family: "Playfair Display", Georgia, serif;
   font-weight: 800;
-  font-size: 36px;
+  font-size: clamp(28px, 8vw, 36px);
 }
 
 .poll-sub {
@@ -366,24 +340,12 @@ body {
   border-color: var(--green);
 }
 
-/* Confirmation */
-.card-confirmation {
-  margin-top: 14px;
-  padding: 12px 14px;
-  background: var(--green-bg);
-  border-radius: 8px;
-  font-size: 14px;
-  color: var(--green);
-}
-
-.card-confirmation p { margin: 0; }
-
 /* Progress dots */
 .card-dots {
   display: flex;
   justify-content: center;
   gap: 8px;
-  padding: 14px 0 0;
+  padding: 0 0 24px;
 }
 
 .dot {
@@ -398,13 +360,6 @@ body {
 
 /* Speaking card */
 .speaking-card {
-  background: rgba(255, 255, 250, 0.78);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 24px 20px;
-  box-shadow: 0 2px 12px rgba(33,29,24,0.05);
   flex: 0 0 auto;
   display: none;
   flex-direction: column;
@@ -559,24 +514,20 @@ body {
   flex: 0 0 100%;
 }
 
-.carousel-card.is-done .event-content {
-  padding: 24px 26px;
-}
-
 .done-confirmation {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 32px 24px;
+  padding: 32px 0;
 }
 
 .done-title {
   margin: 0 0 8px;
   font-family: "Playfair Display", Georgia, serif;
   font-weight: 800;
-  font-size: 32px;
+  font-size: clamp(28px, 8vw, 36px);
   letter-spacing: -0.02em;
 }
 
