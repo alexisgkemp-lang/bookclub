@@ -368,4 +368,5 @@ body {
 @media (max-width: 640px) {
   .welcome-section { padding: 24px 16px; }
   .poll-sheet { max-height: 95svh; padding: 20px; }
+  .section-actions-row { flex-direction: column; }
 }

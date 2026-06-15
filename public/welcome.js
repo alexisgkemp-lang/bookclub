@@ -91,11 +91,15 @@
 
   window.toggleSlot = function (el) {
     var slot = el.dataset.slot;
+    var countEl = document.getElementById("count-" + slot);
+    var currentCount = parseInt(countEl.textContent) || 0;
     el.classList.toggle("selected");
     if (selectedSlots.includes(slot)) {
       selectedSlots = selectedSlots.filter(function (s) { return s !== slot; });
+      if (countEl) countEl.textContent = Math.max(0, currentCount - 1);
     } else {
       selectedSlots.push(slot);
+      if (countEl) countEl.textContent = currentCount + 1;
     }
     var doneBtn = document.querySelector(".btn-vote-done");
     if (selectedSlots.length > 0) {
