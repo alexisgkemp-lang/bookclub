@@ -228,7 +228,7 @@ body {
   margin: 0 0 8px;
   font-family: "Playfair Display", Georgia, serif;
   font-weight: 800;
-  font-size: clamp(28px, 8vw, 36px);
+  font-size: clamp(24px, 6vw, 36px);
 }
 
 .poll-sub {
@@ -366,5 +366,5 @@ body {
 /* ── Mobile ── */
 @media (max-width: 640px) {
   .welcome-section { padding: 24px 16px; }
-  .section-actions-row { flex-direction: column; }
+  .poll-sheet { max-height: 95svh; padding: 20px; }
 }
