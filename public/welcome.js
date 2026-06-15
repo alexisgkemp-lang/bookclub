@@ -3,7 +3,6 @@
   var contactId = params.get("contact_id") || "";
 
   // ── Config ──
-  var EVENT_DATE = "Wednesday 17th June";
   var EVENT_TIME_ISO = "2026-06-17T19:00:00+01:00";
   var WHATSAPP_PHONE = "44776592595";
   var WHATSAPP_MSG = "Hi Alex, I'd like to know more about your speaking lessons";
@@ -24,8 +23,10 @@
   }
 
   // ── Helpers ──
-  function show(id) { document.getElementById(id).classList.remove("is-hidden"); }
-  function hide(id) { document.getElementById(id).classList.add("is-hidden"); }
+  function scrollToSection(id) {
+    var el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  }
 
   async function saveResponse(data) {
     if (!contactId) return;
@@ -36,6 +37,11 @@
         body: JSON.stringify({ contact_id: contactId, ...data })
       });
     } catch (e) {}
+  }
+
+  function getTimezone() {
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ""; }
+    catch (e) { return ""; }
   }
 
   // ── Fetch poll counts ──
@@ -61,28 +67,6 @@
   }
   loadPollCounts();
 
-  // ── Carousel scroll sync ──
-  var track = document.getElementById("carousel-track");
-  var prog1 = document.getElementById("prog-1");
-  var prog2 = document.getElementById("prog-2");
-  var prog1b = document.getElementById("prog-1b");
-  var prog2b = document.getElementById("prog-2b");
-
-  track.addEventListener("scroll", function () {
-    var idx = Math.round(track.scrollLeft / track.offsetWidth);
-    if (prog1) prog1.classList.toggle("active", idx === 0);
-    if (prog2) prog2.classList.toggle("active", idx === 1);
-    if (prog1b) prog1b.classList.toggle("active", idx === 0);
-    if (prog2b) prog2b.classList.toggle("active", idx === 1);
-  });
-
-  function slideToCard2() {
-    var cards = document.querySelectorAll(".carousel-card");
-    if (cards[1]) {
-      cards[1].scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
-    }
-  }
-
   // ── Meetup RSVP ──
   window.handleCanMake = function () {
     var btn = document.querySelector("#rsvp-section .btn-primary");
@@ -94,7 +78,7 @@
       booked_at: new Date().toISOString(),
       timezone: getTimezone()
     });
-    setTimeout(slideToCard2, 600);
+    setTimeout(function () { scrollToSection("section-reading"); }, 600);
   };
 
   // ── Poll sheet ──
@@ -136,7 +120,24 @@
     loadPollCounts();
     setTimeout(function () {
       document.getElementById("poll-sheet").classList.remove("is-open");
-      slideToCard2();
+      scrollToSection("section-reading");
+    }, 400);
+  };
+
+  window.handleSkip = function () {
+    var btn = document.querySelector(".btn-skip");
+    btn.classList.add("selected");
+    btn.textContent = "Skipped";
+    saveResponse({
+      event_id: "meetup-2026-06-17",
+      event_status: "skipped_time_poll",
+      available_slots: [],
+      timezone: getTimezone(),
+      submitted_at: new Date().toISOString()
+    });
+    setTimeout(function () {
+      document.getElementById("poll-sheet").classList.remove("is-open");
+      scrollToSection("section-reading");
     }, 400);
   };
 
@@ -157,7 +158,6 @@
     });
   };
 
-  // ── Done ──
   window.handleDone = function () {
     var btn = document.querySelector(".btn-done");
     btn.classList.add("selected");
@@ -166,38 +166,8 @@
       story_preferences: selectedGenres,
       updated_at: new Date().toISOString()
     });
-    setTimeout(collapseToDone, 400);
+    setTimeout(function () { scrollToSection("section-speaking"); }, 400);
   };
-
-  window.handleSkip = function () {
-    var btn = document.querySelector(".btn-skip");
-    btn.classList.add("selected");
-    btn.textContent = "Skipped";
-    saveResponse({
-      event_id: "meetup-2026-06-17",
-      event_status: "skipped_time_poll",
-      available_slots: [],
-      timezone: getTimezone(),
-      submitted_at: new Date().toISOString()
-    });
-    setTimeout(function () {
-      document.getElementById("poll-sheet").classList.remove("is-open");
-      slideToCard2();
-    }, 400);
-  };
-
-  function collapseToDone() {
-    var readingCard = document.querySelectorAll(".carousel-card")[1];
-    var readingContent = readingCard.querySelector(".event-content");
-    readingContent.innerHTML = '<div class="done-confirmation"><h2 class="done-title">All set</h2><p class="done-detail">I\'ll send you new events, the latest story, and updates. See you at the next event!</p></div>';
-    readingCard.classList.add("is-done");
-    document.getElementById("carousel").classList.add("is-done");
-    document.getElementById("carousel").classList.add("is-collapsed");
-    setTimeout(function () {
-      document.getElementById("card-speaking").classList.add("is-visible");
-      document.getElementById("card-speaking").classList.add("is-expanded");
-    }, 400);
-  }
 
   // ── Speaking / WhatsApp ──
   window.handleWhatsApp = function (e) {
@@ -227,15 +197,4 @@
       source: "welcome_page"
     });
   };
-
-  window.expandSpeaking = function () {
-    var card = document.getElementById("card-speaking");
-    card.classList.toggle("is-expanded");
-  };
-
-  // ── Utility ──
-  function getTimezone() {
-    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ""; }
-    catch (e) { return ""; }
-  }
 })();
