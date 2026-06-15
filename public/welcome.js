@@ -4,7 +4,7 @@
 
   // ── Config ──
   var EVENT_TIME_ISO = "2026-06-17T19:00:00+01:00";
-  var WHATSAPP_PHONE = "44776592595";
+  var WHATSAPP_PHONE = "447765921595";
   var WHATSAPP_MSG = "Hi Alex, I'd like to know more about your speaking lessons";
 
   // ── Timezone ──
