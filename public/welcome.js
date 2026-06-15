@@ -44,14 +44,25 @@
     catch (e) { return ""; }
   }
 
+  // ── Locale-aware time labels ──
+  function formatHour(hour) {
+    var d = new Date();
+    d.setHours(hour, 0, 0, 0);
+    return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }).toLowerCase();
+  }
+
+  document.querySelectorAll(".slot-time").forEach(function (el) {
+    el.textContent = formatHour(parseInt(el.dataset.hour));
+  });
+
   // ── Fetch poll counts ──
   var ALL_SLOTS = [
-    "mon_morning","mon_afternoon","mon_evening",
-    "tue_morning","tue_afternoon","tue_evening",
-    "wed_morning","wed_afternoon","wed_evening",
-    "thu_morning","thu_afternoon","thu_evening",
-    "fri_morning","fri_afternoon","fri_evening",
-    "sat_morning"
+    "mon_11","mon_13","mon_19",
+    "tue_11","tue_13","tue_19",
+    "wed_11","wed_13","wed_19",
+    "thu_11","thu_13","thu_19",
+    "fri_11","fri_13","fri_19",
+    "sat_11"
   ];
 
   async function loadPollCounts() {
