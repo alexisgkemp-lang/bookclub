@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "synced-text-pages",
+  "name": "bookclub1",
   "main": "src/worker.js",
   "compatibility_date": "2026-06-09",
   "assets": {
